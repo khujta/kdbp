@@ -336,6 +336,10 @@ ROUND 2: ATTACK — [Switching to adversarial perspective]
   If my attack feels weak or I'm defending the proposal, I flag it:
   "⚠️ SOFT PUNCH: This attack may be insufficiently adversarial — recommend human review."
 
+ROUND 2b: PATTERN CHECK
+  Cross-reference Round 2 finding against `_kdbp/knowledge/adversarial-patterns.md` (P1-P12).
+  If it matches a known pattern, tag it: "[P#] finding". Known patterns carry more weight than novel findings.
+
 ROUND 3: DEFEND OR ADAPT
   If Round 2 found a real flaw: I propose a fix. The change adapts.
   If Round 2 found nothing real: I defend the original. State why the attack failed.

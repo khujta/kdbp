@@ -19,21 +19,20 @@
 
 ## The Problem
 
-Most agent frameworks solve **memory** — persisting context across sessions.
+Most agent frameworks solve **memory**, persisting context across sessions.
 That's table stakes. The harder problem is **alignment drift**:
 
-Your agent builds exactly what the story says, passes all tests, and ships clean code.
-Three sprints later you realize it's been solving the wrong problem.
-Every step was correct. The direction was wrong.
+Your agent builds exactly what the story says, passes all tests, ships clean code.
+Three sprints later you realize it's been solving the wrong problem the entire time.
 
-KDBP calls this a **Type F error** — the most dangerous kind, because nothing looks broken until it's too late.
+KDBP calls this a **Type F error** — the hardest to detect, because nothing looks broken until you've wasted three sprints.
 
 > *"The bones don't change. The nervous system adapts."*
 
-## What Makes KDBP Different
+## What makes KDBP different
 
-KDBP doesn't just record what happened. It adds a **value layer** that lets you ask
-*why* a workflow step exists — and catch when steps are technically correct but
+KDBP adds a **value layer** on top of session records, letting you ask
+*why* a workflow step exists, and catch when steps are technically correct but
 directionally wrong.
 
 ```mermaid
@@ -58,13 +57,13 @@ graph TB
     style Chain fill:#0d1117,stroke:#f85149,color:#c9d1d9
 ```
 
-**The grounding chain** is the core innovation: `step -> skill reason -> value`.
+The grounding chain is what holds it together: `step -> skill reason -> value`.
 If a workflow step can't justify itself through a skill reason that traces to a value,
 it's **blocked from shipping**. Not deferred — blocked.
 
-### Root Cause Classification
+### Root cause classification
 
-When something goes wrong, KDBP classifies *why* — not just *what*:
+When something goes wrong, KDBP classifies the *why*, not the *what*:
 
 | Type | Root Cause | Fix | Example |
 |------|-----------|-----|---------|
@@ -75,10 +74,10 @@ When something goes wrong, KDBP classifies *why* — not just *what*:
 | **E** | Drift — world changed | Update both | API deprecated, need new approach |
 | **F** | Alignment — wrong direction | **Triple loop** | Built the feature perfectly, but it shouldn't exist |
 
-**Type F** is the one no other framework catches. It requires loading full Value Blocks
-and running a project-level alignment check. KDBP makes this a first-class operation.
+**Type F** is what other frameworks miss. Catching it means loading full Value Blocks
+and running a project-level alignment check. KDBP has a dedicated command for it (`/khujta-dbp EA`).
 
-### Gabe Lens — Cognitive Translation
+### Gabe Lens — Cognitive translation
 
 Complex values and skill reasons are encoded using **Gabe Lens**: physical-system analogies,
 constraint boxes, and one-line handles that survive context compaction.
@@ -101,7 +100,7 @@ EVALUATION ALTITUDE — Story
 The handle *"All external pipes through the filter"* survives compaction.
 The full block loads only at evaluation checkpoints.
 
-### Evaluation Authority
+### Evaluation authority
 
 Not everything is the agent's call:
 
@@ -114,9 +113,9 @@ Not everything is the agent's call:
 
 The agent is explicit: *"This is a draft. Your judgment is authoritative."*
 
-### Adversarial Patterns (12 structural blind spots)
+### Adversarial patterns (12 structural blind spots)
 
-Cataloged from 85+ findings across 8 adversarial reviews, with honest enforcement tiers:
+Cataloged from 8 adversarial reviews (85+ findings), organized by how reliably they're caught:
 
 | Tier | Enforcement | Catch Rate | Examples |
 |------|------------|------------|---------|
@@ -125,9 +124,9 @@ Cataloged from 85+ findings across 8 adversarial reviews, with honest enforcemen
 | **Tier 3 — Design principles** | Human vigilance only | 30-50% | Domain mismatch, enforcement gaps |
 
 *"If it's not a hook, it's a suggestion. Suggestions get ignored."*
-Tier 3 patterns are honestly labeled as unhookable.
+Tier 3 patterns are labeled as unhookable because they are.
 
-## Quick Start
+## Quick start
 
 ```bash
 # 1. Copy KDBP into your project
@@ -146,7 +145,7 @@ cp _kdbp/commands/*.md your-project/.claude/commands/
 
 That's it. Your workflows now have a behavioral layer.
 
-## What It Looks Like
+## What it looks like
 
 **After a dev session**, KDBP auto-generates a ledger entry:
 
@@ -169,7 +168,7 @@ Step 01 — Project Knowledge Loading
   ECC agents will receive cached context.
 ```
 
-**During `/kdbp-code-review`**, the reviewer checks YOUR patterns — not generic ones.
+**During `/kdbp-code-review`**, the reviewer checks YOUR patterns, not generic ones.
 If your project documents "all service functions must sanitize user strings",
 the reviewer verifies it. If your architecture says "no direct DB calls from components",
 the reviewer catches violations.
@@ -191,12 +190,12 @@ Alignment Check — Story Altitude
   This is a draft. Your judgment is authoritative.
 ```
 
-## What You Get
+## What you get
 
 ### 11 Workflows (95 step files)
 
 > Most projects use 2-3 workflows daily (`/kdbp-dev-story` + `/kdbp-code-review`).
-> The rest activate as your project grows.
+> The rest are there when you need them.
 
 **Development** — your existing workflow + behavioral layer:
 
@@ -224,7 +223,7 @@ Alignment Check — Story Altitude
 | `/kdbp-evolve-behavior` | 7 | Evolution engine with adversarial review ("The Roast") |
 | `/kdbp-alignment-check` | 6 | Reflection checkpoint at session/story/epic/project altitude |
 
-### Behavioral Agent
+### Behavioral agent
 
 ```
 /khujta-dbp          → 20-protocol menu (create, evolve, evaluate, absorb)
@@ -287,7 +286,7 @@ graph TB
 - No external dependencies — KDBP is pure markdown, YAML, and XML
 
 <details>
-<summary><strong>Design Decisions</strong></summary>
+<summary><strong>Design decisions</strong></summary>
 
 | Decision | Rationale |
 |----------|-----------|
@@ -300,7 +299,7 @@ graph TB
 </details>
 
 <details>
-<summary><strong>Directory Structure</strong></summary>
+<summary><strong>Directory structure</strong></summary>
 
 ```
 _kdbp/
@@ -328,6 +327,13 @@ _kdbp/
 
 </details>
 
+## Acknowledgments
+
+KDBP's workflow engine and step-file architecture build on patterns from
+[everything-claude-code](https://github.com/anthropics/anthropic-cookbook/tree/main/misc/everything-claude-code) (ECC).
+The agent definitions were originally generated using the BMB suite from
+[BMAD](https://github.com/bmadcode/BMAD-METHOD).
+
 ## Contributing
 
 Found a bug? Have a workflow idea? [Open an issue](https://github.com/khujta/kdbp/issues).
@@ -337,5 +343,5 @@ Want to add a workflow or knowledge file? PRs welcome — just follow the existi
 ---
 
 <p align="center">
-  <sub>Built for developers who think their AI agent should know <em>why</em>, not just <em>how</em>.</sub>
+  <sub>Built for developers who want their AI agent to know <em>why</em>.</sub>
 </p>
