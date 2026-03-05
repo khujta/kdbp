@@ -38,15 +38,15 @@ directionally wrong.
 ```mermaid
 graph TB
     subgraph Layers["Three Layers"]
-        V["<strong>Values</strong><br/><em>WHAT MATTERS</em><br/>Value Blocks with Gabe Lens"]
-        S["<strong>Skills / Knowledge</strong><br/><em>WHY we do it this way</em><br/>Skill reasons + Gabe Blocks"]
-        W["<strong>Workflows</strong><br/><em>HOW we execute</em><br/>Steps + decision trees"]
+        V["Values — WHAT MATTERS"]
+        S["Skills / Knowledge — WHY we do it this way"]
+        W["Workflows — HOW we execute"]
     end
 
     V --- S --- W
 
     subgraph Chain["Grounding Chain"]
-        GC["Every step traces to a reason.<br/>Every reason traces to a value.<br/>No justification = <strong>BLOCKED</strong>."]
+        GC["step → reason → value\nNo justification = BLOCKED"]
     end
 
     W -.-> Chain
@@ -249,16 +249,16 @@ Alignment Check — Story Altitude
 
 ```mermaid
 graph TB
-    subgraph Core["Core (static, identical across projects)"]
-        W["Workflow Engine<br/><code>core/workflow.xml</code>"]
-        H["Hooks (Tier 1)<br/>12 automatic enforcement hooks"]
-        K["Knowledge Files<br/>7 on-demand references"]
+    subgraph Core["Core — static, identical across projects"]
+        W["Workflow Engine"]
+        H["Hooks — 12 automatic enforcement"]
+        K["Knowledge Files — 7 on-demand refs"]
     end
 
-    subgraph Behaviors["behaviors/ (dynamic, per-project)"]
-        R["REGISTRY.md<br/>behavior catalog"]
-        T["trajectory/<br/>ledger + stories + epics"]
-        P["PROJECT.md<br/>project-level values"]
+    subgraph Behaviors["behaviors/ — dynamic, per-project"]
+        R["REGISTRY.md"]
+        T["trajectory/"]
+        P["PROJECT.md"]
     end
 
     subgraph Commands["12 Slash Commands"]
