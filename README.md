@@ -2,7 +2,7 @@
   <h1 align="center">KDBP</h1>
   <p align="center"><strong>Khujta Deep Behavior Protocol</strong></p>
   <p align="center">
-    <em>Your Claude Code agent forgets what it learned last session.<br>KDBP makes it remember — and evolve.</em>
+    <em>Your AI agent does exactly what you asked.<br>But is it doing what you meant?</em>
   </p>
 </p>
 
@@ -19,45 +19,113 @@
 
 ## The Problem
 
-Claude Code workflows are stateless. Every session starts from zero.
-Your agent doesn't know what worked last time, what failed, or why you made
-a design decision three sprints ago.
+Most agent frameworks solve **memory** — persisting context across sessions.
+That's table stakes. The harder problem is **alignment drift**:
 
-**KDBP fixes this.** It adds a behavioral layer on top of your existing workflows
-that records decisions, injects project-specific knowledge at the right moments,
-and lets you run alignment checks when *you* decide — not on every prompt.
+Your agent builds exactly what the story says, passes all tests, and ships clean code.
+Three sprints later you realize it's been solving the wrong problem.
+Every step was correct. The direction was wrong.
+
+KDBP calls this a **Type F error** — the most dangerous kind, because nothing looks broken until it's too late.
 
 > *"The bones don't change. The nervous system adapts."*
 
-## How It Works
+## What Makes KDBP Different
+
+KDBP doesn't just record what happened. It adds a **value layer** that lets you ask
+*why* a workflow step exists — and catch when steps are technically correct but
+directionally wrong.
 
 ```mermaid
-graph LR
-    subgraph Your_Project["Your Claude Code Project"]
-        A["Static Workflows<br/><code>/dev-story, /code-review,<br/>/architect, /prd</code>"]
+graph TB
+    subgraph Layers["Three Layers"]
+        V["<strong>Values</strong><br/><em>WHAT MATTERS</em><br/>Value Blocks with Gabe Lens"]
+        S["<strong>Skills / Knowledge</strong><br/><em>WHY we do it this way</em><br/>Skill reasons + Gabe Blocks"]
+        W["<strong>Workflows</strong><br/><em>HOW we execute</em><br/>Steps + decision trees"]
     end
 
-    subgraph KDBP["_kdbp/ (drop-in)"]
-        B["Dynamic Injection<br/>values + knowledge<br/>loaded at step-00"]
-        C["Automatic Recording<br/>ledger entries<br/>+ cost tracking"]
-        D["On-Demand Introspection<br/><code>/khujta-dbp</code><br/>alignment + evolution"]
+    V --- S --- W
+
+    subgraph Chain["Grounding Chain"]
+        GC["Every step traces to a reason.<br/>Every reason traces to a value.<br/>No justification = <strong>BLOCKED</strong>."]
     end
 
-    A -->|"injection points"| B
-    A -->|"workflow completion"| C
-    D -->|"human-triggered"| A
+    W -.-> Chain
 
-    style KDBP fill:#1a1a2e,stroke:#8A2BE2,color:#fff
-    style Your_Project fill:#16213e,stroke:#0f3460,color:#fff
+    style V fill:#4a1942,stroke:#8A2BE2,color:#fff
+    style S fill:#1a1a2e,stroke:#6C63FF,color:#fff
+    style W fill:#16213e,stroke:#0f3460,color:#fff
+    style Chain fill:#0d1117,stroke:#f85149,color:#c9d1d9
 ```
 
-### Three Capabilities
+**The grounding chain** is the core innovation: `step -> skill reason -> value`.
+If a workflow step can't justify itself through a skill reason that traces to a value,
+it's **blocked from shipping**. Not deferred — blocked.
 
-| Capability | What It Does | Overhead |
-|-----------|-------------|----------|
-| **Recording** | Auto-generates ledger entries and cost tracking at workflow completion | ~500 tokens/session |
-| **Injection** | Loads project-specific values and knowledge at designated workflow steps | Zero (on-demand file reads) |
-| **Introspection** | Alignment checks, story/epic checkpoints, behavior evolution engine | Human-triggered only |
+### Root Cause Classification
+
+When something goes wrong, KDBP classifies *why* — not just *what*:
+
+| Type | Root Cause | Fix | Example |
+|------|-----------|-----|---------|
+| **A** | Doing — step is wrong | Fix the step | Wrong git command |
+| **B** | Knowing — reason is wrong | Fix reason + cascade | Misunderstood API behavior |
+| **C** | Linking — wrong mapping | Fix the linkage | Step exists but serves wrong value |
+| **D** | Gap — missing knowledge | Research + add | Didn't know about rate limits |
+| **E** | Drift — world changed | Update both | API deprecated, need new approach |
+| **F** | Alignment — wrong direction | **Triple loop** | Built the feature perfectly, but it shouldn't exist |
+
+**Type F** is the one no other framework catches. It requires loading full Value Blocks
+and running a project-level alignment check. KDBP makes this a first-class operation.
+
+### Gabe Lens — Cognitive Translation
+
+Complex values and skill reasons are encoded using **Gabe Lens**: physical-system analogies,
+constraint boxes, and one-line handles that survive context compaction.
+
+```
+VALUE BLOCK: Input Sanitization
+
+THE INTENT — Users get data corruption or security breaches
+THE ANALOGY — Water treatment plant: every pipe from outside goes through
+             the filter, no matter how clean it looks
+CONSTRAINT BOX
+  IS:     Every user string through sanitize() before storage
+  IS NOT: Validation (format checking is separate)
+  DECIDES: Whether to accept, truncate, or reject the input
+ONE-LINE HANDLE — "All external pipes through the filter"
+ANALOGY LIMITS — Breaks for binary data; revisit if we add file uploads
+EVALUATION ALTITUDE — Story
+```
+
+The handle *"All external pipes through the filter"* survives compaction.
+The full block loads only at evaluation checkpoints.
+
+### Evaluation Authority
+
+Not everything is the agent's call:
+
+| Altitude | Who Decides | When |
+|----------|------------|------|
+| **Session** | Agent alone | During workflow execution |
+| **Story** | Agent drafts, **human approves** | `/khujta-dbp SC` — story completion |
+| **Epic** | Agent prepares, **human decides** | `/khujta-dbp EC` — epic completion |
+| **Project** | Human-driven | On-demand alignment check |
+
+The agent is explicit: *"This is a draft. Your judgment is authoritative."*
+
+### Adversarial Patterns (12 structural blind spots)
+
+Cataloged from 85+ findings across 8 adversarial reviews, with honest enforcement tiers:
+
+| Tier | Enforcement | Catch Rate | Examples |
+|------|------------|------------|---------|
+| **Tier 1 — Hooks** | Automatic, every session | ~99% | Missing infrastructure, orphaned references |
+| **Tier 2 — Workflow gates** | LLM reasoning at story gates | 60-80% | Wrong ordering, incomplete specs, no scaling strategy |
+| **Tier 3 — Design principles** | Human vigilance only | 30-50% | Domain mismatch, enforcement gaps |
+
+*"If it's not a hook, it's a suggestion. Suggestions get ignored."*
+Tier 3 patterns are honestly labeled as unhookable.
 
 ## Quick Start
 
@@ -76,19 +144,19 @@ cp _kdbp/commands/*.md your-project/.claude/commands/
 /kdbp-init
 ```
 
-That's it. Your workflows now have behavioral memory.
+That's it. Your workflows now have a behavioral layer.
 
 ## What It Looks Like
 
 **After a dev session**, KDBP auto-generates a ledger entry:
 
 ```markdown
-| Date       | Story       | PM-Ref | Behavior     | Outcome                          | Signals            |
-|------------|-------------|--------|--------------|----------------------------------|---------------------|
-| 2026-03-05 | AUTH-003    | SP-12  | input-sanitize | All service fns sanitized, 3 new tests | carry: API rate-limit |
+| Date       | Story    | PM-Ref | Behavior       | Outcome                                  | Signals             |
+|------------|----------|--------|----------------|------------------------------------------|---------------------|
+| 2026-03-05 | AUTH-003 | SP-12  | input-sanitize | All service fns sanitized, 3 new tests   | carry: API rate-limit |
 ```
 
-**During `/kdbp-dev-story`**, your project knowledge is loaded automatically:
+**During `/kdbp-dev-story`**, project knowledge loads automatically:
 
 ```
 Step 01 — Project Knowledge Loading
@@ -105,6 +173,23 @@ Step 01 — Project Knowledge Loading
 If your project documents "all service functions must sanitize user strings",
 the reviewer verifies it. If your architecture says "no direct DB calls from components",
 the reviewer catches violations.
+
+**When something feels off**, you run `/khujta-dbp EA`:
+
+```
+Alignment Check — Story Altitude
+
+  Loading cold tier: full Value Blocks...
+  Checking grounding chain for AUTH-003:
+    Step 04 (planning)     → P4 self-inconsistency gate  → Value: structural-integrity  ✓
+    Step 05a (TDD setup)   → test-first reason           → Value: input-sanitization     ✓
+    Step 08 (review)       → adversarial P7 check        → Value: validation-before-action ✓
+
+  FINDING: Step 06 has no skill reason in linkage map.
+  VERDICT: BLOCK — add justification or remove the step.
+
+  This is a draft. Your judgment is authoritative.
+```
 
 ## What You Get
 
@@ -214,7 +299,8 @@ graph TB
 
 </details>
 
-## Directory Structure
+<details>
+<summary><strong>Directory Structure</strong></summary>
 
 ```
 _kdbp/
@@ -240,6 +326,8 @@ _kdbp/
     └── kdbp-alignment-check/
 ```
 
+</details>
+
 ## Contributing
 
 Found a bug? Have a workflow idea? [Open an issue](https://github.com/khujta/kdbp/issues).
@@ -249,5 +337,5 @@ Want to add a workflow or knowledge file? PRs welcome — just follow the existi
 ---
 
 <p align="center">
-  <sub>Built for developers who think their Claude Code agent should learn, not just execute.</sub>
+  <sub>Built for developers who think their AI agent should know <em>why</em>, not just <em>how</em>.</sub>
 </p>
